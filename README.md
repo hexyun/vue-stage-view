@@ -1,49 +1,32 @@
-# Vue Minder
+# Vue stage view
 
-本组件主要内聚百度脑图的能力，使脑图可以便于在Vue生态下进行扩展。
-[DEMO地址](http://hexyun.github.io/vue-minder)
+该组件主要解决大量图片展示的问题， 并且在图片选中和查看时候提供交互能力 [demo]
 
---- 
+## 特性
 
-Vue Minder 基于百度脑图核心代码[kityminder-core](https://github.com/fex-team/kityminder-core)，主要满足在Vue项目中开发和使用。感谢[FEX Team](https://github.com/fex-team)
+- [x] 界面支持拖拽
+- [ ] 图片懒加载
+- [ ] 大图（详情）支持拖拽
+- [ ] 大图（详情）支持上下切换图
 
 ## 安装
 
 ```
-yarn add vue-minder
-npm install vue-minder
+yarn add vue-stage-view
+npm install vue-stage-view
 ```
 
 ## 使用
-
-<!--Vue百度脑图控件-->
-
 ```vue
-<minder
-  :show-search-box="showSearchBox"
-  :show-template="showTemplate" 
-  :show-theme="showTheme"  
-  :show-navigator="showNavigator" 
-  :enable="enable" :style="style" 
-  :import-data="importData" 
-  v-ref:minder>
-</minder>
+<stage-view :list="list" key="url"></stage-view>
 ```
 
 ### props说明
 
-- show-search-box 是否显示搜索框
-- show-template 是否显示模板
-- show-theme 是否显示主题
-- show-navigator 是否显示导航器
-- enable 禁用或编辑模式
-- import-data 导入的数据
+- list 图片数组， 其中为对象形式
+- key 图片地址对应的字段
 
 [具体使用可参考](./examples)
-
-## 与百度脑图不同之处
-
-- 数据中的字段 text 改为 name
        
 ## 开发和贡献
 

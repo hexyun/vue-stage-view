@@ -23,7 +23,7 @@
     "dev": "webpack-dev-server --content-base examples/ --open --inline --hot --compress --history-api-fallback  --port 10000 --config build/webpack.dev.config.js --host 127.0.0.1",
     "watch": "webpack --watch --config build/webpack.dev.config.js",
     "build:style": "gulp --gulpfile build/build-style.js",
-    "docs": "webpack --config build/webpack.docs.config.js && npm run copy:docs",
+    "docs": "webpack --config build/webpack.docs.config.js ",
     "build:prod": "npm run build:style && webpack --config build/webpack.dist.prod.config.js",
     "build": "rm -fr docs dist && npm run svgo && npm run build:prod && npm run docs",
     "svgo": "svgo --enable=removeXMLNS  src/components/icon/icons/*.svg",

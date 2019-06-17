@@ -1,6 +1,6 @@
 
 <template>
-  <stage-view :list='list'></stage-view>
+  <stage-view :list="list" key="url"></stage-view>
 </template>
 <script>
   function mockData() {
