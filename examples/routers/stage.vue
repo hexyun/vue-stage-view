@@ -1,6 +1,6 @@
 
 <template>
-  <stage-view :list="list" key="url"></stage-view>
+  <stage-view :list="list" key-thumb="url" key-detail="url"></stage-view>
 </template>
 <script>
   function mockData() {
@@ -20,6 +20,7 @@
       })
       i++
     }
+    console.log(list)
     return list
   }
   export default {

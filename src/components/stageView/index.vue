@@ -26,13 +26,13 @@
 <template>
   <div class="stage__wrapper">
     <stage v-ref:stage @zoom="zoom">
-      <image-view @select="select" @view="view" :zoom="z / 100" :list="list" :key="key"></image-view>
+      <image-view @select="select" @view="view" :zoom="z / 100" :list="list" :key="keyThumb"></image-view>
     </stage>
     <div class="stage__navigator">
       <div class="nav-btn zoom-out"
            @click="$refs.stage.zoomOut()"
            title="缩小">
-        <svg t="1557915928818" class="icon" style="" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1989" xmlns:xlink="http://www.w3.org/1999/xlink"width="32" height="32"><defs><style type="text/css"></style></defs><path d="M604.16 430.08c0 11.264-9.216 20.48-20.48 20.48H450.56v133.12c0 11.264-9.216 20.48-20.48 20.48s-20.48-9.216-20.48-20.48V450.56H276.48c-11.264 0-20.48-9.216-20.48-20.48s9.216-20.48 20.48-20.48h133.12V276.48c0-11.264 9.216-20.48 20.48-20.48s20.48 9.216 20.48 20.48v133.12h133.12c11.264 0 20.48 9.216 20.48 20.48z m359.424 533.504c-4.096 4.096-9.216 6.144-14.336 6.144s-10.24-2.048-14.336-6.144L683.008 711.68C615.424 772.096 527.36 808.96 430.08 808.96 221.184 808.96 51.2 638.976 51.2 430.08S221.184 51.2 430.08 51.2s378.88 169.984 378.88 378.88c0 97.28-36.864 185.344-97.28 252.928l251.904 251.904c8.192 8.192 8.192 20.48 0 28.672zM768 430.08C768 243.712 616.448 92.16 430.08 92.16S92.16 243.712 92.16 430.08s151.552 337.92 337.92 337.92 337.92-151.552 337.92-337.92z" p-id="1990" fill="#2c2c2c"></path></svg>
+        <svg t="1557915928818" class="icon" style="" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1989" xmlns:xlink="http://www.w3.org/1999/xlink" width="32" height="32"><defs><style type="text/css"></style></defs><path d="M604.16 430.08c0 11.264-9.216 20.48-20.48 20.48H450.56v133.12c0 11.264-9.216 20.48-20.48 20.48s-20.48-9.216-20.48-20.48V450.56H276.48c-11.264 0-20.48-9.216-20.48-20.48s9.216-20.48 20.48-20.48h133.12V276.48c0-11.264 9.216-20.48 20.48-20.48s20.48 9.216 20.48 20.48v133.12h133.12c11.264 0 20.48 9.216 20.48 20.48z m359.424 533.504c-4.096 4.096-9.216 6.144-14.336 6.144s-10.24-2.048-14.336-6.144L683.008 711.68C615.424 772.096 527.36 808.96 430.08 808.96 221.184 808.96 51.2 638.976 51.2 430.08S221.184 51.2 430.08 51.2s378.88 169.984 378.88 378.88c0 97.28-36.864 185.344-97.28 252.928l251.904 251.904c8.192 8.192 8.192 20.48 0 28.672zM768 430.08C768 243.712 616.448 92.16 430.08 92.16S92.16 243.712 92.16 430.08s151.552 337.92 337.92 337.92 337.92-151.552 337.92-337.92z" p-id="1990" fill="#2c2c2c"></path></svg>
       </div>
 
       <div v-el:zoom-pan class="zoom--pan">
@@ -51,7 +51,7 @@
     </div>
   </div>
 
-  <mt-img-viewer class="stage__preview" :page="page" v-ref:viewer :list="selectList" @changed="changed" :key="key" :show="selectShow" lock  :select-item="selectItem"></mt-img-viewer>
+  <mt-img-viewer class="stage__preview" :page="page" v-ref:viewer :list="selectList" @changed="changed" :key="keyDetail" :show="selectShow" lock  :select-item="selectItem"></mt-img-viewer>
 
 </template>
 <script>
@@ -62,9 +62,22 @@
         type: Array,
         default: []
       },
-      key: {
+      keyThumb: {
         type: String,
         default: 'url'
+      },
+      keyDetail: {
+        type: String,
+        default: 'url'
+      },
+      selectThumb: {
+        type: Function,
+        default: function() {}
+      },
+
+      selectDetail: {
+        type: Function,
+        default: function() {}
       }
     },
     data() {
@@ -73,9 +86,7 @@
         zD: 100,
         selectList: [],
         selectShow: false,
-        page:1,
-        currentDetailItem: null,
-        currentItem: null
+        page:1
       }
     },
     methods: {
@@ -86,10 +97,13 @@
         this.zD = zoom * 100
       },
       select(item) {
-        this.currentItem = item
+        console.log('thumb mode select')
+        this.selectThumb(item, this.list)
       },
       selectItem(item, index, list) {
-        this.currentDetailItem = item
+        // this.$emit('select-thumb', item)
+        console.log('detail mode select')
+        this.selectDetail(item, this.list)
       },
       changed(show) {
         if(!show) {
@@ -99,7 +113,8 @@
       },
       view(item) {
         this.selectList = [item]
-        this.currentDetailItem = item
+        console.log('detail select')
+        this.selectDetail(item, this.list)
         this.selectShow = true
       }
     }

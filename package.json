@@ -1,18 +1,14 @@
 {
   "name": "vue-stage-view",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "title": "Vue Stage View",
   "description": "Vue Kityminder",
   "homepage": "https://github.com/hexyun/vue-stage-view",
   "keywords": [
-    "kityminder",
-    "vue",
-    "vue.js",
-    "component",
-    "components",
-    "ui",
-    "framework",
-    "baidu naotu"
+    "stage-view",
+    "stage",
+    "image viewer",
+    "viewer"
   ],
   "main": "dist/stage.min.js",
   "files": [
