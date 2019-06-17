@@ -1,9 +1,9 @@
 {
-  "name": "stage-view",
+  "name": "vue-stage-view",
   "version": "0.0.1",
   "title": "Vue Stage View",
   "description": "Vue Kityminder",
-  "homepage": "https://github.com/hexyun/vue-stage",
+  "homepage": "https://github.com/hexyun/vue-stage-view",
   "keywords": [
     "kityminder",
     "vue",
