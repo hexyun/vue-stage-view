@@ -11,12 +11,7 @@ export default class Matrix {
     this.el = $(el)
     this.x = x
     this.y = y
-    this.a = 1
-    this.b = 0
-    this.c = 0
-    this.d = 1
-    this.e = 0
-    this.f = 0
+    this.reset()
     const styles = window.getComputedStyle(this.el, null)
     this.w = parseInt(styles.width)
     this.h = parseInt(styles.height)
@@ -33,14 +28,19 @@ export default class Matrix {
       this.f
     ].join(',')
   }
+  reset() {
+    this.a = 1
+    this.b = 0
+    this.c = 0
+    this.d = 1
+    this.e = 0
+    this.f = 0
+    return this
+  }
 
   // 保证宽度和高度，不管怎样缩放都在一个固定的值, 缩放的相对位置都是相对于 el的正中间
   fix() {
     if(this._zoom != this.a) {
-      const w = Math.min(this.a < 1 ? this.w / this.a : this.w * this.a, this.w)
-      const h = Math.min(this.a < 1 ? this.h / this.a : this.h * this.a, this.h)
-      // this.el.style.width = `${w}px`
-      // this.el.style.height = `${h}px`
       this._zoom = this.a
     }
   }

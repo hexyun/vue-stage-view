@@ -34,7 +34,7 @@
     box-sizing: border-box;
   }
   .stage-img__item .img.active{
-    box-shadow: 0 0 0 2px #7864f0;
+    border: 2px solid #7864f0;
   }
 </style>
 <template>
