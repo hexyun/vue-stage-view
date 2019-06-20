@@ -26,7 +26,7 @@
 <template>
   <div class="stage__wrapper">
     <stage v-ref:stage @zoom="zoom">
-      <image-view @select="select" @view="view" :zoom="z / 100" :list="list" :key="keyThumb"></image-view>
+      <image-view v-ref:list @select="select" @view="view" :zoom="z / 100" :key-title="keyTitle"  :list="filterList" :key="keyThumb" :keyword="keyword"></image-view>
     </stage>
     <div class="stage__navigator">
       <div class="nav-btn zoom-out"
@@ -51,13 +51,17 @@
     </div>
   </div>
 
-  <mt-img-viewer class="stage__preview" :page="page" v-ref:viewer :list="selectList" @changed="changed" :key="keyDetail" :show="selectShow" lock  :select-item="selectItem"></mt-img-viewer>
+  <mt-img-viewer class="stage__preview" :page="page" v-ref:viewer :list="selectList" @changed="changed" :key="keyDetail" :key-title="keyTitle" :show="selectShow" lock  :select-item="selectItem"></mt-img-viewer>
 
 </template>
 <script>
   export default {
     name: 'stage-view',
     props: {
+      keyword: {
+        type: String,
+        default: ''
+      },
       list: {
         type: Array,
         default: []
@@ -70,12 +74,20 @@
         type: String,
         default: 'url'
       },
+      keyTitle: {
+        type: String,
+        default: 'title'
+      },
       selectThumb: {
         type: Function,
         default: function() {}
       },
 
       selectDetail: {
+        type: Function,
+        default: function() {}
+      },
+      search: {
         type: Function,
         default: function() {}
       }
@@ -86,7 +98,26 @@
         zD: 100,
         selectList: [],
         selectShow: false,
-        page:1
+        page:1,
+        currentItem: null
+      }
+    },
+    watch: {
+      filterList(val, old) {
+        this.search(val, this.keyword)
+      }
+    },
+    computed:{
+      filterList() {
+        let list = this.list
+        if(this.keyword) {
+          list = list.filter(x => {
+            let title = x[this.keyTitle]
+            if(!title) return true
+            return title.indexOf(this.keyword.trim()) > -1
+          })
+        }
+        return list
       }
     },
     methods: {
@@ -98,13 +129,15 @@
       },
       select(item) {
         console.log('thumb mode select')
-        this.selectThumb(item, this.list)
+        this.currentItem = item
+        this.selectThumb(item, this.filterList)
       },
       selectItem(item, index, list) {
         // this.$emit('select-thumb', item)
         console.log('detail mode select')
-        this.selectDetail(item, this.list)
+        this.selectDetail(item, this.filterList)
       },
+      // 大图隐藏
       changed(show) {
         if(!show) {
           this.selectList = []
@@ -113,8 +146,8 @@
       },
       view(item) {
         this.selectList = [item]
-        console.log('detail select')
-        this.selectDetail(item, this.list)
+        this.currentItem = item
+        this.selectDetail(item, this.filterList)
         this.selectShow = true
       }
     }

@@ -18,13 +18,17 @@ export default class Dragger {
         if(typeof cb === 'function') {
           cb({x: this.x - this.lastX , y: this.y - this.lastY})
         }
+        if(this.x < 10 || this.y < 10) this.off()
         this.lastX = this.x
         this.lastY = this.y
         return false
       }
-      this.up = () => {
+      this.off = () => {
         this.el.removeEventListener('mousemove', this.move)
         this.el.removeEventListener('mouseup', this.down)
+      }
+      this.up = () => {
+        this.off()
         return false
       }
       this.el.addEventListener('mousedown', this.down)

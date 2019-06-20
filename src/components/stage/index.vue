@@ -28,9 +28,9 @@
     transform-origin: 50% 50%;
     -webkit-transform-style: preserve-3d;
     /*user-select: none;*/
-    display: flex;
+    /* display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center; */
   }
   .effect--removed{
     transition: unset;
@@ -52,7 +52,7 @@
     },
     ready() {
       this.matrix = new Matrix(this.$els.base, {})
-      this.dragger = new Dragger(this.$els.stage, throttle(({x, y}) => {
+      this.dragger = new Dragger(document.body, throttle(({x, y}) => {
         if(x != 0 || y != 0) this.matrix.translate({x: x * 2, y: y * 2}, true).matrix()
       }, 16.6))
       this.$els.stage.oncontextmenu = function(e) {

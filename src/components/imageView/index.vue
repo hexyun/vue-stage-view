@@ -9,21 +9,29 @@
     position: relative;
     width: 24vw;
     list-style: none;
+    margin-bottom: .5vw;
+    user-select: none;
   }
   .stage-img__item .title{
     transition: font-size 0.5s ease-in-out;
     font-size: 16px;
     margin: 0;
-    padding-bottom: 5px;
-    padding-top: 5px;
+    padding: 5px;
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    text-align:center;
+    background-color: rgba(0,0,0,.4);
+    color: #fff;
   }
   .stage-img__item .img{
+    -webkit-user-drag: none;
     max-width: 100%;
     max-height: 100%;
     display: block;
     box-sizing: border-box;
-    user-select: none;
-    -webkit-user-drag: none;
   }
   .stage-img__item .img.active{
     box-shadow: 0 0 0 2px #7864f0;
@@ -32,11 +40,11 @@
 <template>
   <ul class="stage-img__container">
     <li v-for="(index, item) in list" track-by="$index" class="stage-img__item">
-      <p class="title" :style="titleStyle">{{item.title}}</p>
+      <p v-show="item[keyTitle]" class="title" :style="titleStyle">{{item[keyTitle]}}</p>
       <img @click="select(index)" :class="{
         'img': true,
         'active': currentIndex === index
-      }" :title="item.title" :src="item[key]" v-load>
+      }" :title="item[keyTitle]" :src="item[key]" v-load>
     </li>
   </ul>
 </template>
@@ -63,11 +71,15 @@
       key: {
         type: String,
         default: 'url'
+      },
+      keyTitle: {
+        type: String,
+        default: 'title'
       }
     },
     data() {
       return {
-        currentIndex: 0,
+        currentIndex: -1,
         timer: null,
         lastClick: 0
       }
@@ -79,7 +91,6 @@
         if(Date.now() - this.lastClick < 200) {
           this.timer && clearTimeout(this.timer)
           this.$emit('view', this.list[index])
-        
         // click
         } else {
           this.timer = setTimeout(() => {
@@ -88,7 +99,6 @@
           }, 200)
         }
         this.lastClick = Date.now()
-
       },
     },
     computed: {
@@ -98,7 +108,7 @@
         return {
           'font-size': `${size}px`
         }
-      },
+      }
     },
     beforeDestroy() {
       this.timer = null
