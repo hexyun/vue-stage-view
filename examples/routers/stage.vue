@@ -7,6 +7,7 @@
     key-detail="url"
     :keyword="keyword"
     key-title="title"
+    :scale="zoom"
   ></stage-view>
 </template>
 <script>
@@ -35,7 +36,8 @@ export default {
   data() {
     return {
       list: mockData(),
-      keyword: ""
+      keyword: "",
+      zoom: 60
     };
   },
   ready() {

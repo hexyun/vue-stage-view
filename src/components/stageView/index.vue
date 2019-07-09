@@ -41,8 +41,8 @@
 </style>
 <template>
   <div class="stage__wrapper">
-    <stage v-ref:stage @zoom="zoom">
-      <image-view v-ref:list @select="select" @view="view" :zoom="z / 100" :key-title="keyTitle" :list="filterList"
+    <stage v-ref:stage @zoom="zoom" :zoom="z / 100">
+      <image-view v-ref:list @select="select" @view="view" :zoom="z" :key-title="keyTitle" :list="filterList"
                   :key="keyThumb" :keyword="keyword"></image-view>
     </stage>
     <div class="stage__navigator">
@@ -112,6 +112,10 @@
         type: String,
         default: ''
       },
+      scale: {
+        type: [Number, String],
+        default: 100
+      },
       list: {
         type: Array,
         default: []
@@ -147,7 +151,7 @@
     },
     data() {
       return {
-        z: 100,
+        z: this.scale,
         zD: 100,
         selectList: [],
         selectShow: false,
@@ -183,17 +187,18 @@
     },
     methods: {
       zoom(zoom) {
-        this.z = zoom * 100
+        if(zoom <= 1) {
+          this.z = zoom * 100
+        }
       },
       zoomDetail(zoom) {
-        this.zD = zoom * 100
+        if(zoom <= 1) this.zD = zoom * 100
       },
       select(item) {
-        console.log('thumb mode select')
         this.currentItem = item
         this.selectThumb(item, this.filterList)
       },
-      selectItem(item, index, list) {
+      selectItem(item) {
         // this.$emit('select-thumb', item)
         this.selectDetail(item, this.filterList)
       },
@@ -204,7 +209,7 @@
         }
       },
       view(item) {
-        this.matrix.reset().matrix()
+        this.matrix.reset()
         this.currentItem = item
         this.selectDetail(item, this.filterList)
         this.selectShow = true

@@ -43,7 +43,12 @@
 
   export default {
     name: 'stage',
-    props: {},
+    props: {
+      zoom: {
+        type: [Number, String],
+        default: 1
+      }
+    },
     data() {
       return {
         matrix: null,
@@ -52,7 +57,9 @@
       }
     },
     ready() {
-      this.matrix = new Matrix(this.$els.base, {})
+      this.matrix = new Matrix(this.$els.base, {
+        zoom: this.zoom
+      })
       this.dragger = new Dragger(this.$els.stage, throttle(({x, y}) => {
         if(x != 0 || y != 0) this.matrix.translate({x: x * 2, y: y * 2}, true).matrix()
       }, 16.6))
@@ -64,13 +71,13 @@
     methods: {
       // 缩放
       zoomIn() {
-        this.matrix.scale(Math.max((this.matrix.a * 100 - 20) / 100, 0.2)).matrix()
-        this.$emit('zoom', this.matrix.a)
+        this.matrix.scale(Math.max((this.matrix.a * 100 - 20) / 100, 0.4)).matrix()
+        this.$emit('zoom', this.matrix.zoom)
       },
       // 放大
       zoomOut() {
         this.matrix.scale(Math.min((this.matrix.a * 100 + 20) / 100, 2)).matrix()
-        this.$emit('zoom', this.matrix.a)
+        this.$emit('zoom', this.matrix.zoom)
       }
     },
     beforeDestroy() {

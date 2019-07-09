@@ -7,10 +7,11 @@
 import { $ } from '../../utils/dom'
 
 export default class Matrix {
-  constructor(el, { x = 0, y = 0, removedEffectClass = 'effect--removed'}) {
+  constructor(el, { x = 0, y = 0, removedEffectClass = 'effect--removed', zoom = 1}) {
     this.el = $(el)
     this.x = x
     this.y = y
+    this.zoom = zoom
     this.reset()
     const styles = window.getComputedStyle(this.el, null)
     this.w = parseInt(styles.width)
@@ -28,27 +29,23 @@ export default class Matrix {
       this.f
     ].join(',')
   }
-  reset() {
-    this.a = 1
-    this.b = 0
-    this.c = 0
-    this.d = 1
-    this.e = 0
-    this.f = 0
+  setZoom(zoom) {
+    this.a = this.d = this.zoom = zoom
     return this
   }
-
-  // 保证宽度和高度，不管怎样缩放都在一个固定的值, 缩放的相对位置都是相对于 el的正中间
-  fix() {
-    if(this._zoom != this.a) {
-      this._zoom = this.a
-    }
+  reset() {
+    this.a = this.zoom
+    this.b = 0
+    this.c = 0
+    this.d = this.zoom
+    this.e = 0
+    this.f = 0
+    return this.matrix()
   }
 
   matrix() {
     var ctx = this
     window.requestAnimationFrame(function() {
-      ctx.fix()
       ctx.el.style.transform = `matrix(${ctx.meta()})`
     })
     return this
@@ -64,6 +61,7 @@ export default class Matrix {
   }
 
   scale(zoom, offset) {
+    this.setZoom(zoom)
     this.a = offset ? this.a * zoom : zoom
     this.d = offset ? this.d * zoom : zoom
 

@@ -1,23 +1,24 @@
 export default {
-    bind () {
-      if(this.el.nodeName !== 'IMG') return
-      this.img = new Image()
-      // console.log(this.vm, this.expression)
-      this.vm.$nextTick(() => {
-        const old = this.el.getAttribute('src')
-        const lazySrc = this.el.getAttribute('data-src')
-        const ctx = this
-        this.img.src = old
-        if(lazySrc) this.el.src = lazySrc
-        // console.log(this.el)
-        // console.log(old)
-        
-        this.img.onload = function() {
-          ctx.el.setAttribute('src', old)
-        }
-      })
-    },
-    unbind () {
-      this.img = null
-    }
+  bind() {
+    if(this.el.nodeName !== 'IMG') return
+    this.img = new Image()
+    this.vm.$nextTick(() => {
+      const old = this.el.getAttribute('data-src')
+      const lazySrc = this.el.getAttribute('lazy-src')
+      if(lazySrc) this.el.src = lazySrc
+      this.img.src = old
+      this.img.onload = ()=> {
+        this.el.setAttribute('src', old)
+        const w = this.img.naturalWidth || this.img.width
+        const h = this.img.naturalHeight || this.img.height
+        this.el.width = w
+        this.el.height = h
+        this.el.parentNode.style.width = `${w}px`
+        this.el.parentNode.style.height = `${h}px`
+      }
+    })
+  },
+  unbind() {
+    this.img = null
+  }
 };

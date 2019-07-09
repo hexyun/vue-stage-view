@@ -1,16 +1,18 @@
 <style lang="less">
   .stage-img__container {
-    column-count: 4;
-    column-gap: .5vw;
-    padding-top: .5vw;
+    width: 200%;
     margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
   }
   .stage-img__item {
     position: relative;
-    width: 24vw;
     list-style: none;
-    margin-bottom: .5vw;
     user-select: none;
+    margin-right: 30px;
+    margin-bottom: 30px;
+    transition: margin-right 0.5s ease, margin-bottom 0.5s ease-in;
   }
   .stage-img__item .title{
     transition: font-size 0.5s ease-in-out;
@@ -18,33 +20,26 @@
     margin: 0;
     padding: 5px;
     box-sizing: border-box;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    text-align:center;
-    background-color: rgba(0,0,0,.4);
-    color: #fff;
+    text-align:left;
+    color: #111;
   }
   .stage-img__item .img{
     -webkit-user-drag: none;
-    max-width: 100%;
-    max-height: 100%;
     display: block;
     box-sizing: border-box;
   }
   .stage-img__item .img.active{
-    border: 2px solid #7864f0;
+    box-shadow: -1px 3px 10px #a19cc0;
   }
 </style>
 <template>
   <ul class="stage-img__container">
-    <li v-for="(index, item) in list" track-by="$index" class="stage-img__item">
+    <li :style="stageStyle" v-for="(index, item) in list" track-by="$index" class="stage-img__item">
       <p v-show="item[keyTitle]" class="title" :style="titleStyle">{{item[keyTitle]}}</p>
-      <img @click="select(index)" :class="{
+      <img :data-src="item[key]" v-load @click="select(index)" :class="{
         'img': true,
         'active': currentIndex === index
-      }" :title="item[keyTitle]" :src="item[key]" v-load>
+      }" :title="item[keyTitle]">
     </li>
   </ul>
 </template>
@@ -100,11 +95,26 @@
         }
         this.lastClick = Date.now()
       },
+      _ajustedZoom() {
+        let zoom = 1
+        if(this.zoom > 3 && this.zoom <= 300) {
+          zoom = this.zoom / 100
+        } else if(this.zoom <= 3 && this.zoom >= 0.3) {
+          zoom = this.zoom
+        }
+        return Math.min(zoom, 1)
+      }
     },
     computed: {
+      stageStyle() {
+        let bottom = 30 / this._ajustedZoom()
+        return {
+          'margin-bottom': `${bottom}px`,
+          'margin-right': `${bottom}px`
+        }
+      },
       titleStyle() {
-        let size = 16
-        if(this.zoom < 1) size =  size * 0.9 / this.zoom
+        let size = 16 / this._ajustedZoom()
         return {
           'font-size': `${size}px`
         }
