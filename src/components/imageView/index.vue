@@ -22,6 +22,9 @@
     box-sizing: border-box;
     text-align:left;
     color: #111;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .stage-img__item .img{
     -webkit-user-drag: none;
